@@ -29,7 +29,7 @@ if os.path.exists(json_save):
 mdfiles = []
 for root,dirs,files in os.walk(vroot):
     for file in files:
-        if file[-3:] == ".md":
+        if len(file) > 3 and file[-3:] == ".md":
             mdfiles.append(root.replace("\\","/")+"/"+file)
 #2.2.读取文件信息
 for filePath in mdfiles:
