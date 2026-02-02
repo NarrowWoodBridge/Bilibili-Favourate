@@ -454,7 +454,7 @@ def batchSingleNote(alist, path, checkbox=0, title2Dict={}):
 for anEP in eps:  #anEP有三个键：'epData', 'epSingleVideoData' , 'epPath'
     epData = anEP['epData']
     #epData有：title,cover(合集目录已有，这里用不上),epVideoList,sections(里面有合集中视频的信息，我已将其放到epVideoList中)
-    epTitle = epData['title']
+    epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
 
     #md目录文件的路径
     mdfileroute = xexists(epTitle,aim="file", reason="处理合集：获取目录路径")
