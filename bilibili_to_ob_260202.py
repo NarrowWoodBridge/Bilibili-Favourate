@@ -10,7 +10,7 @@ vroot = "B站视频"  #储存所有视频笔记的文件夹
 
 infoDict = {}  #key为bvid，value为视频信息组成的字典{'title':xx, 'upper':xx......}
 eps = []  #视频合集最后再一起处理
-renamed = {}
+renamed = {}  #重命名的文件记录字典，key为原始标题，value为[文件夹路径，修改后的标题]
 
 #字符串：删后缀
 def delSuf(self: str, suffix: str) -> str:
