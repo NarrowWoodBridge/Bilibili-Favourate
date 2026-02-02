@@ -1,0 +1,200 @@
+{
+  "main": {
+    "id": "5003cf7465eeb1f0",
+    "type": "split",
+    "children": [
+      {
+        "id": "1e8940bda051d5f1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8b7ca471b4564264",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "468700955f238cd9",
+    "type": "split",
+    "children": [
+      {
+        "id": "9e1189d315562cf2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "17b33c21fabea6fb",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "adb81d1d2d7211b4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": true,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "ed8332ed17652f62",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 371.5110321044922
+  },
+  "right": {
+    "id": "383b50b51de73ddb",
+    "type": "split",
+    "children": [
+      {
+        "id": "9c6b905a9286502c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "727cf3f94aa07e53",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "700 功能性文件/HomePage.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "HomePage 的出链列表"
+            }
+          },
+          {
+            "id": "cac7390735e803a6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "700 功能性文件/HomePage.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "HomePage 的反向链接列表"
+            }
+          },
+          {
+            "id": "c1188df9670f7ddb",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "2386ce9dce165791",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:创建新数据库": false,
+      "canvas:新建白板": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "command-palette:打开命令面板": false,
+      "homepage:Open homepage": false,
+      "obsidian-excalidraw-plugin:新建 Excalidraw 绘图": false,
+      "webpage-html-export:Export Vault to HTML": false
+    }
+  },
+  "active": "8b7ca471b4564264",
+  "lastOpenFiles": [
+    "功能性文件/B站视频dvjs.md",
+    "bilibili_to_ob_260202.py",
+    "bilibili_to_ob copy.py",
+    "700 功能性文件/HomePage.md",
+    "README.md",
+    "每月笔记编辑数量汇总.md",
+    "github链接.md",
+    "B站视频/临时/【02.多Page】/教大家如何获取问卷星的正确答案2.0关于无法复制的解决方案/教大家如何获取问卷星的正确答案2.0关于无法复制的解决方案.md",
+    "B站视频/临时/【02.多Page】/教大家如何获取问卷星的正确答案2.0关于无法复制的解决方案/笔记/bandicam 2020-09-04 13-40-33-948.md",
+    "B站视频/临时/【02.多Page】/教大家如何获取问卷星的正确答案2.0关于无法复制的解决方案/笔记/提取真实id.md",
+    "B站视频/临时/【02.多Page】/教大家如何获取问卷星的正确答案2.0关于无法复制的解决方案/笔记/提取真实id2.md",
+    "B站视频/临时/钉钉 直播 回放 下载.md",
+    "B站视频/临时/垃圾分类手抄报，为你准备好啦.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/增肌增力，减脂瘦身.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/【每天一次】最高效的跳绳减脂方法，强化核心不伤膝，新手友好.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/【打卡】15分钟跳绳+腰腹训练，高效刷脂减小腰围，音乐卡点.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/俯卧撑手腕痛 I 3步解决.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/增加肩宽.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/弹力带全身训练.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/巧克力腹肌.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/户外增肌训练.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/练腹肌，有手就行 ｜ 10分钟腹肌撕裂，坚持就能拥有.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/解锁俯卧撑.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/笔记/解锁引体向上.md",
+    "B站视频/体育/【01.视频合集】/14天体能逆袭打卡挑战/14天体能逆袭打卡挑战.md",
+    "B站视频/体育/【01.视频合集】/14天体能逆袭打卡挑战/笔记/5分钟肩颈拉伸.md",
+    "B站视频/体育/【01.视频合集】/14天体能逆袭打卡挑战/笔记/「体能提升」训练.md",
+    "B站视频/体育/【01.视频合集】/14天体能逆袭打卡挑战/笔记/零基础俯卧撑训练.md",
+    "bilibili/效果展示.mp4"
+  ]
+}

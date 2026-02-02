@@ -1,0 +1,142 @@
+{
+  "main": {
+    "id": "5003cf7465eeb1f0",
+    "type": "split",
+    "children": [
+      {
+        "id": "684e8be2433aafdf",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "700 功能性文件/HomePage.md",
+            "mode": "preview",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "9fd37b2b72b01f13",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "c371af012d2344cf",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical"
+          }
+        }
+      },
+      {
+        "id": "ebc0262dfd76dd77",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          }
+        }
+      },
+      {
+        "id": "ddb9e2d0404e464f",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true
+          }
+        }
+      },
+      {
+        "id": "54a29ff2a5f6d8b6",
+        "type": "leaf",
+        "state": {
+          "type": "all-properties",
+          "state": {
+            "sortOrder": "frequency"
+          }
+        }
+      },
+      {
+        "id": "91ed8ec5a0754faf",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {}
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "19bafd2b5a849b38",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "7475ff71d916c77a",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "file": "700 功能性文件/HomePage.md",
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          }
+        }
+      },
+      {
+        "id": "a77399db3ea56cfb",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "file": "700 功能性文件/HomePage.md",
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          }
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "command-palette:打开命令面板": false,
+      "homepage:Open homepage": false
+    }
+  },
+  "active": "684e8be2433aafdf",
+  "lastOpenFiles": [
+    "B站视频/临时/垃圾分类手抄报，为你准备好啦.md",
+    "B站视频/电影/“有时候，只是需要20秒钟的勇气”.md",
+    "bilibili/效果展示.mp4",
+    "700 功能性文件/HomePage.md",
+    "B站视频/学习/【02.多Page】/【初中历史】超全知识点合集！知识点梳理！（时间短、、人教版、初中历史、中考历史、初一七年级上下册、初二八年级、初三九年级）/【初中历史】超全知识点合集！知识点梳理！（时间短、、人教版、初中历史、中考历史、初一七年级上下册、初二八年级、初三九年级）.md",
+    "B站视频/学习/【01.视频合集】/高效听力训练/高效听力训练.md",
+    "B站视频/学习/【01.视频合集】/初中数学：二级结论合集/初中数学：二级结论合集.md",
+    "B站视频/学习/【01.视频合集】/初中数学：二级结论合集/笔记/面积之比：燕尾定理模型、蝴蝶定理、梯形蝴蝶模型、共角模型.md",
+    "dv/当前文件中带有关键词的行.md",
+    "B站视频/体育/【01.视频合集】/增肌增力，减脂瘦身/增肌增力，减脂瘦身.md",
+    "B站视频/体育/【体测作弊般提高柔韧】体前屈2分钟让你手掌着地！.md",
+    "B站视频/体育/最详细俯卧撑解锁教程，5个步骤，提高俯卧撑数量和动作质量.md"
+  ]
+}

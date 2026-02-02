@@ -1,0 +1,16 @@
+{
+  "legacyEditor": false,
+  "livePreview": false,
+  "promptDelete": false,
+  "defaultViewMode": "preview",
+  "autoPairMarkdown": true,
+  "autoPairBrackets": true,
+  "autoConvertHtml": true,
+  "showLineNumber": false,
+  "communityThemeSortOrder": "release",
+  "attachmentFolderPath": "800 附件",
+  "showUnsupportedFiles": true,
+  "readableLineLength": false,
+  "alwaysUpdateLinks": true,
+  "vimMode": false
+}

@@ -1,0 +1,1 @@
+[GitHub - nimamxd25/Obsidian-PythonScript](https://github.com/nimamxd25/Obsidian-PythonScript)
