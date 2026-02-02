@@ -61,6 +61,9 @@ def search(bvid, aim, reason=""):
     #获取信息
     new_url = 'https://api.bilibili.com/x/web-interface/view?bvid={}'.format(bvid)
     vid = json.loads(requests.get(url=new_url, headers=headers).text)
+    if('data' not in vid):
+        print("!!!查询失败：("+reason+")bvid="+bvid)
+        return None
     data = vid['data']
     #开始打表
     infoDict[bvid] = {}
@@ -373,6 +376,8 @@ def update(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={}):
         A,B,C = readmdfile(lines,["# 视频","# 笔记"])  #分段读取
         for item in aimlist:
             title = search(item, 'title', reason = "获取标题，检测链接是否存在")
+            if title==None:  #!!!404
+                continue
             title2 = title2Dict[item]
             f = 1  #旗标，1表示未添加
             for num, had in enumerate(B):
