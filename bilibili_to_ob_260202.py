@@ -273,7 +273,7 @@ def bilibili_to_ob(path_one,url):
             epData = data['ugc_season']
             epData['epVideoList'] = epData['sections'][0]['episodes']  #合集中的视频列表
             epVideoList = epData['epVideoList']  #合集中的视频列表
-            epTitle = epData['title']  #合集标题
+            epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
             epCover = epData['cover']  #合集封面
 
             #【合集】对应的文件夹
