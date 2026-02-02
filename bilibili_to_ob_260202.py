@@ -177,7 +177,7 @@ def readmdfile(lines,splitList):
         ret[-1].append(line)
     return ret
 
-def single(db , path, checkbox=0, page=0, videoList="", note="", title2=""):
+def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
     #checkbox表示是否需要勾选框
     #page用于生成[多page视频]中的单个page的链接
 
@@ -186,9 +186,9 @@ def single(db , path, checkbox=0, page=0, videoList="", note="", title2=""):
     #判断笔记是否已经存在，不存在则创建
     if not xexists(title, aim="file", reason="新建文件：判断文件是否存在"):
         mkdir(path)
-        if not title2:
-            title2 = title
-        with open('{}/{}.md'.format(path, title2), 'w', encoding="utf-8") as f:
+        if not title_file:
+            title_file = title
+        with open('{}/{}.md'.format(path, title_file), 'w', encoding="utf-8") as f:
             #字段：根据情况添加，若db中有，就添加，反之亦然
             f.write('---\n')
             if checkbox:
