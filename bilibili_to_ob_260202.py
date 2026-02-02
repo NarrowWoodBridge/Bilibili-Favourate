@@ -245,11 +245,10 @@ def bilibili_to_ob(path_one,url):
         upper = item['upper']['name']  #''''''''''''''''upper
         cover = item['cover']  #''''''''''''''''''''''''cover
 
+        #print("::::::"+title)  #debug
         data = search(bvid, 'all', reason="获取完整视频信息")
         if data == None:
             continue
-        
-        #print("::::::"+title)
         
         if data['type']=='single':  #单个视频
             db = {'类型':'single','bvid':bvid,'title':title,'upper':upper,'cover':cover}

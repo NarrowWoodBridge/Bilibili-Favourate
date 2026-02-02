@@ -16,7 +16,12 @@
 	- 全收藏合集.md：全收藏合集列表
 
 ## 数据结构
-- infoDict：{ bvid: { title, upper, cover } }
+- infoDict：{ bvid : {} }：
+	- type：single、pages、ep
+	- title
+	- upper
+	- cover
+	- \*epData：当且仅当type='ep'
 - eps：合集临时列表，每项包含：
   - epData：合集元数据
 	  - title：合集标题
