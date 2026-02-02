@@ -76,7 +76,7 @@
 ### get_id() -> dict
 获取账号所有收藏夹元数据 { title: { id, count } }。
 
-### update(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={})
+### updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={})
 更新合集目录 md 内容（含链接转换和笔记改名逻辑）。
 
 ### batchSingleNote(alist, path, checkbox=0, title2Dict={})
