@@ -66,18 +66,44 @@ def search(bvid, aim, reason=""):
         return None
     data = vid['data']
     #开始打表
-    infoDict[bvid] = {}
-    #+++标题
-    title = xreplace(data['title'])
-    infoDict[bvid]['title'] = title
-    #+++up
-    upper = xreplace(data['owner']['name'])
-    infoDict[bvid]['upper'] = upper
-    #+++封面
-    cover = data['pic']
-    infoDict[bvid]['cover'] = cover
+    infoDict[bvid] = {
+        'type': '',
+        'title': xreplace(data['title']),
+        'upper': xreplace(data['owner']['name']),
+        'cover': data['pic']
+    }
+    if 'ugc_season' not in data:
+        if len(data['pages'])==1:
+            infoDict[bvid]['type'] = "single"
+        else:
+            infoDict[bvid]['type'] = "pages"
+            pages = data['pages']
+            infoDict[bvid]['pages'] = [ xreplace(i['part']) for i in pages]
+            for i in pages:
+                page_name = xreplace(i['part'])
+    else:
+        infoDict[bvid]['type'] = "ep"
+        epDataOri = data['ugc_season']
+        epVideoListOri = epDataOri['sections'][0]['episodes']  #合集中的视频列表
+        infoDict[bvid]['epData'] = {
+            'title': xreplace(epDataOri['title']),  #合集标题  //!!注意字符替换
+            'cover': epDataOri['cover'],  #合集封面
+            'epVideoList': [ {
+                'bvid': i['bvid'],
+                'title': xreplace(i['title'])
+            } for i in epVideoListOri ]
+        }
+    # #+++标题
+    # title = xreplace(data['title'])
+    # infoDict[bvid]['title'] = title
+    # #+++up
+    # upper = xreplace(data['owner']['name'])
+    # infoDict[bvid]['upper'] = upper
+    # #+++封面
+    # cover = data['pic']
+    # infoDict[bvid]['cover'] = cover
     #返回结果
-    print("???查询：("+reason+")"+title)
+    print("???查询：("+reason+")"+infoDict[bvid]['title'])
     if aim == "all":
         return infoDict[bvid]
     return infoDict[bvid][aim]
@@ -180,8 +206,11 @@ def readmdfile(lines,splitList):
 def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
     #checkbox表示是否需要勾选框
     #page用于生成[多page视频]中的单个page的链接
-
-    #各种文件都有的字段
+    def write_keys(f, db, keys):
+        for key in keys:
+            if key in db:
+                f.write('{}: {}\n'.format(key, db[key]))
+    #公有字段
     title = db['title']; upper = db['upper']
     #判断笔记是否已经存在，不存在则创建
     if not xexists(title, aim="file", reason="新建文件：判断文件是否存在"):
@@ -193,13 +222,14 @@ def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
             f.write('---\n')
             if checkbox:
                 f.write('target: tasks\nstatus: in progress\ntags: bilibili\n')
-            f.write('类型: {}\n'.format(db['类型']))
-            if 'bvid' in db:
-                f.write('bvid: {}\n'.format(db['bvid']))
-            f.write('title: {}\n'.format(title))
-            f.write('upper: {}\n'.format(upper))
-            if 'cover' in db:
-                f.write('cover: {}\n'.format(db['cover']))
+            # f.write('类型: {}\n'.format(db['类型']))
+            # if 'bvid' in db:
+            #     f.write('bvid: {}\n'.format(db['bvid']))
+            # f.write('title: {}\n'.format(title))
+            # f.write('upper: {}\n'.format(upper))
+            # if 'cover' in db:
+            #     f.write('cover: {}\n'.format(db['cover']))
+            write_keys(f, db, ['类型','bvid','title','upper','cover'])  #简化
             f.write('---\n')
             #封面也根据有无来添加
             if 'cover' in db:
@@ -230,7 +260,10 @@ def bilibili_to_ob(path_one,url):
         title = xreplace(item['title'])  #''''''''''''''title
         upper = item['upper']['name']  #''''''''''''''''upper
         cover = item['cover']  #''''''''''''''''''''''''cover
-        #重新爬取
+
+        search(bvid, 'all', reason="获取完整视频信息")
+
+        #重新爬取完整数据
         new_url = 'https://api.bilibili.com/x/web-interface/view?bvid={}'.format(bvid)
         vid = json.loads(requests.get(url=new_url, headers=headers).text)
         if 'data' in vid:  #有效项目
@@ -271,6 +304,7 @@ def bilibili_to_ob(path_one,url):
             infoDict[bvid]['upper'] = upper
             #添加封面到字典
             infoDict[bvid]['cover'] = cover
+            #~~~上面几行等同于：search(bvid, 'all', reason="获取合集内单个视频的信息")
 
             #获取【合集】信息
             epData = data['ugc_season']
@@ -365,7 +399,7 @@ for favFolderName in names:
         bilibili_to_ob(path_one, url)
 
 #更新合集目录中的视频清单
-def update(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={}):
+def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={}):
     #mdfileroute为要更新的视频目录md文件的路径
     #path_ep为此合集所在的文件夹路径
     #aimlist为合集中的所有视频的bvid
@@ -448,7 +482,7 @@ def batchSingleNote(alist, path, checkbox=0, title2Dict={}):
         upper = all['upper']
         cover = all['cover']
         db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-        single(db, path, checkbox=checkbox, title2=title2)
+        single(db, path, checkbox=checkbox, title_file=title2)
 
 #处理合集
 for anEP in eps:  #anEP有三个键：'epData', 'epSingleVideoData' , 'epPath'
@@ -483,14 +517,14 @@ for anEP in eps:  #anEP有三个键：'epData', 'epSingleVideoData' , 'epPath'
         mkdir(path_three)
         print(">>全收藏："+epTitle)
         #更新目录文件.md
-        update(mdfileroute, path_ep, aimlist, opt=0, title2Dict=title2Dict)
+        updateList(mdfileroute, path_ep, aimlist, opt=0, title2Dict=title2Dict)
         #单个视频的笔记
         batchSingleNote(aimlist, path_three, title2Dict=title2Dict)
     else:  #部分收藏的视频合集
         mkdir(path_ep)
         print(">>部分收藏："+epTitle)
         #更新目录文件.md
-        update(mdfileroute, path_ep, aimlist, opt=1, singlelist=singlelist, title2Dict=title2Dict)
+        updateList(mdfileroute, path_ep, aimlist, opt=1, singlelist=singlelist, title2Dict=title2Dict)
         #单个视频的笔记
         batchSingleNote(singlelist, path_one, checkbox=1)
 

@@ -19,6 +19,10 @@
 - infoDict：{ bvid: { title, upper, cover } }
 - eps：合集临时列表，每项包含：
   - epData：合集元数据
+	  - title：合集标题
+	  - cover(合集目录已有，这里用不上)
+	  - epVideoList
+	  - sections(里面有合集中视频的信息，我已将其放到epVideoList中)
   - epSingleVideoData：此合集里被单独收藏的视频数据
   - epPath：收藏夹本地路径
 - renamed：已改名文件记录
