@@ -45,9 +45,52 @@
         "cover": "http://i0.hdslb.com/bfs/archive/bc63ff6a903f43da6e8c68b379d41140ed8b34da.jpg"
     },
     "BV1wb4y1m7rZ": {
+        "type": "ep",
         "title": "\u3010\u62ef\u6551\u4f53\u5dee\u751f\u3011\u5728\u5bb6\u5c31\u80fd\u7ec3\u7684\u300c\u4f53\u80fd\u63d0\u5347\u300d\u8bad\u7ec3\uff5c\u8f7b\u677e\u4f53\u6d4b\u4e0d\u75db\u82e6\uff08\u5b8c\u6574\u8ddf\u7ec3\u7248\uff09",
         "upper": "\u8dd1\u6b65\u7684\u5b50\u7ae0\u8001\u5e08",
-        "cover": "http://i2.hdslb.com/bfs/archive/0e4744171dfb649ad42034ade37f86b4f75e7204.jpg"
+        "cover": "http://i2.hdslb.com/bfs/archive/0e4744171dfb649ad42034ade37f86b4f75e7204.jpg",
+        "epData": {
+            "title": "\u4f53\u8003\u6ee1\u5206\u9526\u56ca",
+            "cover": "https://archive.biliimg.com/bfs/archive/ba14e08b13149e13d2a534850a3d0d04a179ac0a.jpg",
+            "epVideoList": [
+                {
+                    "bvid": "BV1wb4y1m7rZ",
+                    "title": "\u5c45\u5bb6\u300c\u4f53\u6d4b\u63d0\u5347\u300d\u8bad\u7ec3"
+                },
+                {
+                    "bvid": "BV14K4y1W7iQ",
+                    "title": "\u96f6\u57fa\u7840\u4fef\u5367\u6491\u8bad\u7ec3"
+                },
+                {
+                    "bvid": "BV1Cr4y1P7hj",
+                    "title": "\u96f6\u57fa\u7840\u9006\u88ad\u5f39\u8df3"
+                },
+                {
+                    "bvid": "BV1jc411J7dQ",
+                    "title": "\u3010\u8eab\u4f53\u9ed1\u5ba2\u3011\u4f53\u524d\u5c4820\u79d2\u6478\u5230\u5730\u9762\uff5c\u4f53\u6d4b\u5fc5\u8fc7"
+                },
+                {
+                    "bvid": "BV1nL411T7Mq",
+                    "title": "\u5982\u4f55\u8f7b\u677e\u63d0\u5347\u5f15\u4f53\u5411\u4e0a\u4e2a\u6570\uff1f\u4ece0\u523013+\uff08\u4f53\u6d4b\u6ee1\u5206\uff09"
+                },
+                {
+                    "bvid": "BV1dh411U7CC",
+                    "title": "\u30105\u5206\u949f\u8003\u524d\u7a81\u51fb\u3011800\u7c731000\u7c73\u8f7b\u677e\u9ad8\u5206\uff5c\u8eab\u4f53\u9ed1\u5ba2 \u4f53\u80b2\u8003\u8bd5\u9006\u5929\u6539\u547d\uff5c\u4f53\u6d4b \u4f53\u8003 \u4f53\u80b2\u8003\u8bd5 \u8dd1\u6b65"
+                },
+                {
+                    "bvid": "BV11Z4y1c75a",
+                    "title": "\u3010\u65b0\u624b\u5411\uff5c\u7acb\u5b9a\u8df3\u8fdc\u30115\u5206\u949f\u7a81\u51fb\u8bad\u7ec3\uff0c\u591a\u8df35\u5398\u7c73\uff0c\u8f7b\u677e\u9ad8\u5206\uff5c\u8eab\u4f53\u9ed1\u5ba2 \u4f53\u80b2\u8003\u8bd5\u9006\u5929\u6539\u547d\uff5c\u4f53\u6d4b \u4f53\u8003 \u4f53\u80b2\u8003\u8bd5"
+                },
+                {
+                    "bvid": "BV1cE42157mK",
+                    "title": "\u3010\u4fdd\u59c6\u7ea7\u3011800-1000\u7c73\u6ee1\u5206\u4e0a\u5cb8\uff0c\u7ec3\u8fd9\u4e09\u4e2a\u5c31\u591f"
+                },
+                {
+                    "bvid": "BV15rofYuEgb",
+                    "title": "\u522b\u8ba9\u9519\u8bef\u59ff\u6bc1\u4e86800-1000\u7c73\u6210\u7ee9\uff0c10\u79d2\u770b\u61c2\u8dd1\u6b65\u901f\u5ea6\u6838\u5fc3\u903b\u8f91"
+                }
+            ]
+        }
     },
     "BV1P64y127jS": {
         "type": "single",
@@ -62,9 +105,48 @@
         "cover": "http://i1.hdslb.com/bfs/archive/305da5adae84b763ac6a3e11461988164dc345d7.jpg"
     },
     "BV17T4y1o7mj": {
+        "type": "ep",
         "title": "\u6700\u8be6\u7ec6\u4fef\u5367\u6491\u89e3\u9501\u6559\u7a0b\uff0c5\u4e2a\u6b65\u9aa4\uff0c\u63d0\u9ad8\u4fef\u5367\u6491\u6570\u91cf\u548c\u52a8\u4f5c\u8d28\u91cf",
         "upper": "Erik\u57c3\u91cc\u514b",
-        "cover": "http://i1.hdslb.com/bfs/archive/3b76bf476c50429579fb92a5c1fe48a19db26ffa.jpg"
+        "cover": "http://i1.hdslb.com/bfs/archive/3b76bf476c50429579fb92a5c1fe48a19db26ffa.jpg",
+        "epData": {
+            "title": "\u589e\u808c\u589e\u529b\uff0c\u51cf\u8102\u7626\u8eab",
+            "cover": "https://archive.biliimg.com/bfs/archive/58381e2aeea07e1b676efa5fb0264202b4840053.jpg",
+            "epVideoList": [
+                {
+                    "bvid": "BV17T4y1o7mj",
+                    "title": "\u89e3\u9501\u4fef\u5367\u6491"
+                },
+                {
+                    "bvid": "BV1ZT4y1U7vX",
+                    "title": "\u5f39\u529b\u5e26\u5168\u8eab\u8bad\u7ec3"
+                },
+                {
+                    "bvid": "BV13u411o753",
+                    "title": "\u6237\u5916\u589e\u808c\u8bad\u7ec3"
+                },
+                {
+                    "bvid": "BV1S44y1e7pL",
+                    "title": "\u89e3\u9501\u5f15\u4f53\u5411\u4e0a"
+                },
+                {
+                    "bvid": "BV1qR4y1n7Lm",
+                    "title": "\u5de7\u514b\u529b\u8179\u808c"
+                },
+                {
+                    "bvid": "BV1xw411d7Y2",
+                    "title": "\u589e\u52a0\u80a9\u5bbd"
+                },
+                {
+                    "bvid": "BV1Je4y1d7GM",
+                    "title": "\u4fef\u5367\u6491\u624b\u8155\u75db I 3\u6b65\u89e3\u51b3"
+                },
+                {
+                    "bvid": "BV1sB4y1G7q3",
+                    "title": "\u7ec3\u8179\u808c\uff0c\u6709\u624b\u5c31\u884c \uff5c 10\u5206\u949f\u8179\u808c\u6495\u88c2\uff0c\u575a\u6301\u5c31\u80fd\u62e5\u6709"
+                }
+            ]
+        }
     },
     "BV1f34y1U7mt": {
         "type": "single",
