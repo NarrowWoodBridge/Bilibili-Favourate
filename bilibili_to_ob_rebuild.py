@@ -235,95 +235,91 @@ def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
             f.write('# 笔记\n')
             f.write(note)
 
-def bilibili_to_ob(path_one,url):
-    #爬取同步收藏夹内容
-    response = requests.get(url=url, headers=headers)
-    json_data = json.loads(response.text)
-    medias = json_data['data']['medias']
-    for item in medias:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
-        bvid = item['bvid']  #'''''''''''''''''''''''''''bvid
-        title = xreplace(item['title'])  #''''''''''''''title
-        upper = item['upper']['name']  #''''''''''''''''upper
-        cover = item['cover']  #''''''''''''''''''''''''cover
+def bilibili_to_ob(path_one, item):
+    #爬取一个收藏夹项目
+    bvid = item['bvid']  #'''''''''''''''''''''''''''bvid
+    title = xreplace(item['title'])  #''''''''''''''title
+    upper = item['upper']['name']  #''''''''''''''''upper
+    cover = item['cover']  #''''''''''''''''''''''''cover
 
-        #print("::::::"+title)  #debug
-        data = search(bvid, 'all', reason="获取完整视频信息")
-        if data == None:
-            continue
-        
-        if data['type']=='single':  #单个视频
-            db = {'类型':'single','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-            single(db, path_one, checkbox=1)
-        elif data['type']=='pages':  #多page视频
-            pages = data['pages']
-            #创建对应文件夹
-            path_two = '{}/【02.多Page】/{}'.format(path_one,title)
-            path_three = '{}/{}'.format(path_two,'笔记')
-            #判断[文件夹或目录文件]是否已经存在,如果不存在，则创建新目录和文件
-            if not xexists(title, aim="file"):
-                mkdir(path_three)
-                videoList = ""
-                for i in pages:
-                    page_name = xreplace(i['part'])
-                    videoList += '- [ ] [[{}]]\n'.format(page_name)
-                    #单个视频的笔记
-                    db = {'类型':'page','bvid':bvid,'title':page_name,'upper':upper}
-                    single(db, path_three, page=i['page'])
-                db2 = {'类型':'pages','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-                single(db2, path_two, videoList=videoList)
-        elif data['type']=='ep':  #此视频属于某个视频合集
-            #获取【合集】信息
-            epData = data['epData']
-            epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
-            epCover = epData['cover']  #合集封面
+    #print("::::::"+title)  #debug
+    data = search(bvid, 'all', reason="获取完整视频信息")
+    if data == None:
+        return #查询失败，跳过此视频
+    
+    if data['type']=='single':  #单个视频
+        db = {'类型':'single','bvid':bvid,'title':title,'upper':upper,'cover':cover}
+        single(db, path_one, checkbox=1)
+    elif data['type']=='pages':  #多page视频
+        pages = data['pages']
+        #创建对应文件夹
+        path_two = '{}/【02.多Page】/{}'.format(path_one,title)
+        path_three = '{}/{}'.format(path_two,'笔记')
+        #判断[文件夹或目录文件]是否已经存在,如果不存在，则创建新目录和文件
+        if not xexists(title, aim="file"):
+            mkdir(path_three)
+            videoList = ""
+            for i in pages:
+                page_name = xreplace(i['part'])
+                videoList += '- [ ] [[{}]]\n'.format(page_name)
+                #单个视频的笔记
+                db = {'类型':'page','bvid':bvid,'title':page_name,'upper':upper}
+                single(db, path_three, page=i['page'])
+            db2 = {'类型':'pages','bvid':bvid,'title':title,'upper':upper,'cover':cover}
+            single(db2, path_two, videoList=videoList)
+    elif data['type']=='ep':  #此视频属于某个视频合集
+        #获取【合集】信息
+        epData = data['epData']
+        epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
+        epCover = epData['cover']  #合集封面
 
-            #【合集】对应的文件夹
-            path_two = '{}/【01.视频合集】/{}'.format(path_one,epTitle)
+        #【合集】对应的文件夹
+        path_two = '{}/【01.视频合集】/{}'.format(path_one,epTitle)
 
-            #向【集合】中添加当前视频信息；若合集不存在，则添加合集相关信息
-            p = 0
-            for anEP in eps:
-                if epTitle == anEP['epData']['title']:
-                    anEP['epSingleVideos'].append(data)  #向合集数据中添加关于此单独收藏的视频的信息
-                    p += 1
-            if p == 0:
-                eps.append({'epData': epData , 'epSingleVideos': [bvid] , 'epPath': path_one})  #是否拷贝赋值
+        #向【集合】中添加当前视频信息；若合集不存在，则添加合集相关信息
+        p = 0
+        for anEP in eps:
+            if epTitle == anEP['epData']['title']:
+                anEP['epSingleVideos'].append(data)  #向合集数据中添加关于此单独收藏的视频的信息
+                p += 1
+        if p == 0:
+            eps.append({'epData': epData , 'epSingleVideos': [bvid] , 'epPath': path_one})  #是否拷贝赋值
 
-            #保证【合集目录.md】存在
-            db = {'类型':'ep','title':epTitle,'upper':upper,'cover':epCover}
-            single(db, path_two)
+        #保证【合集目录.md】存在
+        db = {'类型':'ep','title':epTitle,'upper':upper,'cover':epCover}
+        single(db, path_two)
 
-            #若【当前视频】从属于全收藏合集，则单个视频的笔记(存在的话)要移动到合集文件夹中
-            oriRoute = xexists(title, aim="file", reason="文件移动相关：获取视频路径")  #文件原路径，文件不存在则为False
-            path_ep = xexists(epTitle, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
-            path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
-            #单个视频的笔记已存在且需要被移动
-            if oriRoute and epTitle in epList and not path_epNote in oriRoute:
-                print("移动："+oriRoute+"==>"+path_epNote)
-                nowTitle = delSuf(oriRoute.split("/")[-1],".md")  #移动前的标题
-                '''
-                if nowTitle == title:  #若笔记标题为视频原标题(未修改)，则将其改名为其在合集中的第二标题
-                    for aVideo in epVideoList:
-                        if aVideo['bvid'] == bvid:
-                            title2 = aVideo['title']
-                            nowTitle = title if len(title2)>=24 and len(title) > len(title2) and title.startswith(title2) else title2
-                            break
-                '''
-                newPath = '{}/{}.md'.format(path_epNote,nowTitle)  #移动后的路径
-                if title in renamed:
-                    renamed[title]=[path_epNote,nowTitle]  #记录这个本就被改名的文件的新路径
-                mkdir(path_epNote)
-                shutil.move(oriRoute, newPath)  #移动到文件目标路径
-                #读取并重写，目的是去除为dv进度条服务的标记
-                #分段读取
-                with open(newPath,"r",encoding="UTF-8") as mdfile:
-                    lines = mdfile.readlines()
-                    A,B,C = readmdfile(lines,["# 视频","# 笔记"])
-                #删除
-                os.remove(newPath)
-                #写入
-                db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-                single(db, path_epNote, note=addStrs(C), title2=nowTitle)
+        #若【当前视频】从属于全收藏合集，则单个视频的笔记(存在的话)要移动到合集文件夹中
+        oriRoute = xexists(title, aim="file", reason="文件移动相关：获取视频路径")  #文件原路径，文件不存在则为False
+        path_ep = xexists(epTitle, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
+        path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
+        #单个视频的笔记已存在且需要被移动
+        if oriRoute and epTitle in epList and not path_epNote in oriRoute:
+            print("移动："+oriRoute+"==>"+path_epNote)
+            nowTitle = delSuf(oriRoute.split("/")[-1],".md")  #移动前的标题
+            '''
+            if nowTitle == title:  #若笔记标题为视频原标题(未修改)，则将其改名为其在合集中的第二标题
+                for aVideo in epVideoList:
+                    if aVideo['bvid'] == bvid:
+                        title2 = aVideo['title']
+                        nowTitle = title if len(title2)>=24 and len(title) > len(title2) and title.startswith(title2) else title2
+                        break
+            '''
+            newPath = '{}/{}.md'.format(path_epNote,nowTitle)  #移动后的路径
+            if title in renamed:
+                renamed[title]=[path_epNote,nowTitle]  #记录这个本就被改名的文件的新路径
+            mkdir(path_epNote)
+            shutil.move(oriRoute, newPath)  #移动到文件目标路径
+            #读取并重写，目的是去除为dv进度条服务的标记
+            #分段读取
+            with open(newPath,"r",encoding="UTF-8") as mdfile:
+                lines = mdfile.readlines()
+                A,B,C = readmdfile(lines,["# 视频","# 笔记"])
+            #删除
+            os.remove(newPath)
+            #写入
+            db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
+            single(db, path_epNote, note=addStrs(C), title2=nowTitle)
 
 def get_id():
     # 获取mid
@@ -353,14 +349,19 @@ names = [i for i in names if i != '']  #去除空项目
 
 #遍历要同步的b站收藏夹，对收藏夹内视频进行“to-ob”的操作
 for favFolderName in names:
+    path_one = '{}/{}'.format(vroot, favFolderName)  #本地收藏夹路径
     print("----------"+favFolderName)
     id_ = favFolders[favFolderName]['id']
     count = favFolders[favFolderName]['count']  #收藏夹内视频数量
     num_page = int(count/20)+1  #每20个视频分为一组，求出一共多少组
     for i in range(num_page):
         url = 'https://api.bilibili.com/x/v3/fav/resource/list?media_id={}&pn={}&ps=20&keyword=&order=mtime&type=0&tid=0&platform=web&jsonp=jsonp'.format(id_, i+1)
-        path_one = '{}/{}'.format(vroot, favFolderName)  #本地收藏夹路径
-        bilibili_to_ob(path_one, url)
+        #爬取同步收藏夹内容
+        response = requests.get(url=url, headers=headers)
+        json_data = json.loads(response.text)
+        medias = json_data['data']['medias']
+        for item in medias:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
+            bilibili_to_ob(path_one, item)
 
 #更新合集目录中的视频清单
 def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={}):
