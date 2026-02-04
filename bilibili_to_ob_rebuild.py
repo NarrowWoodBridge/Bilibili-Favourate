@@ -140,7 +140,8 @@ def xreplace(string):
     return string.replace('/','-').replace('|','｜').replace(':','：').replace('?','？').replace('<','【').replace('>','】').replace('[','【').replace(']','】')
 
 #判断md文件/文件夹是否存在与某个目录或其子目录下
-#若存在，则返回路径，否则返回false
+#若不存在，则返回false
+#存在时，aim=none时返回True，aim=file时返回文件路径，aim=dir时返回目录路径
 def xexists(name, aim="none", start=vroot, limit=False, reason=""):
     for root, dirs, files in os.walk(start):
         root = root.replace("\\","/")
@@ -161,7 +162,7 @@ def xexists(name, aim="none", start=vroot, limit=False, reason=""):
                     if aim == "dir":
                         return path
                     return True
-        if limit:
+        if limit:  #限制只搜索当前目录，不搜子目录
             return False
     print("不存在："+name+" ({})".format(reason))
     return False
@@ -175,7 +176,7 @@ def mkdir(path):
         pass
 
 #将字符串列表组合成一个字符串
-def add(aList, opt=0):
+def addStrs(aList, opt=0):
     ret = ""
     for line in aList:
         ret += line+"\n"
@@ -322,7 +323,7 @@ def bilibili_to_ob(path_one,url):
                 os.remove(newPath)
                 #写入
                 db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-                single(db, path_epNote, note=add(C), title2=nowTitle)
+                single(db, path_epNote, note=addStrs(C), title2=nowTitle)
 
 def get_id():
     # 获取mid
@@ -428,11 +429,11 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                     B[num] = state + "[[{}]]".format(aimTitle)
 
     with open(mdfileroute,"w",encoding="UTF-8") as mdfile:
-        mdfile.write(add(A, 1))
+        mdfile.write(addStrs(A, 1))
         mdfile.write("# 视频\n")
-        mdfile.write(add(B, 1))
+        mdfile.write(addStrs(B, 1))
         mdfile.write("# 笔记\n")
-        mdfile.write(add(C))
+        mdfile.write(addStrs(C))
 
 #批量新建合集中的视频
 def batchSingleNote(alist, path, checkbox=0, title2Dict={}):

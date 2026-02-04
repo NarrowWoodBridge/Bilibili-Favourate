@@ -55,7 +55,7 @@
 ### mkdir(path)
 创建目录（若不存在）。
 
-### add(aList, opt=0) -> str
+### addStrs(aList, opt=0) -> str
 将字符串列表拼接成文本。opt=0 时去掉末尾换行。
 
 ### readmdfile(lines, splitList) -> list[list[str]]
