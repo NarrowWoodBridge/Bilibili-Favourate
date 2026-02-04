@@ -321,7 +321,7 @@ def bilibili_to_ob(path_one, item):
             os.remove(newPath)
             #写入
             db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-            single(db, path_epNote, note=addStrs(C), title2=nowTitle)
+            single(db, path_epNote, note=addStrs(C), title_file=nowTitle)
 
 def get_id():
     # 获取mid
@@ -384,6 +384,7 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
             for num, had in enumerate(B):
                 if (item in had) or (title in had) or (title in renamed and renamed[title][1] in had):  #此项已有，无需新增
                     f = 0
+                    #网页链接->超链接
                     if item in had:  #(item为视频的bvid)链接类型为网页链接(这是转换链接类型的前提)
                         if (item in singlelist) or (opt == 0):  #需要转换类型的链接(网页链接->超链接)
                             state = had[:6]
@@ -410,11 +411,13 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                     B.append("- [ ] ["+title2+"]("+video_url+")")
         if opt == 0:
             for num, had in enumerate(B):
+                #特殊处理带别名的链接
                 if "[[" in had and "|" in had and had.endswith("]]"):
                     state = had[:6]
                     nowTitle = had[8:].split("|")[0]
                     aimTitle = had.split("|")[1][:-2]
-                    p = 1
+                    aimTitle = xreplace(aimTitle)  #别名可能含有特殊字符
+                    p = 1  #旗标，1表示此笔记名称未被人为修改
                     for oriTitle in renamed:
                         if renamed[oriTitle][1] == nowTitle:  #“可能是”被改过名的单个视频笔记，需进一步确认
                             if path_ep in renamed[oriTitle][0]:  #确实这个合集里面有这个被改名的笔记
@@ -424,7 +427,7 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                         #此链接对应的视频笔记没有被人为修改，还是视频原标题，且被移动到合集笔记文件夹了
                         #此时的nowTitle就是对应视频的原标题
 
-                        #此时链接名称(aimTitle)为超链接的显示名称，若此名称被人为修改过，则需要将笔记文件的名称改为此名称
+                        #笔记文件名->超链接别名(aimTitle)
                         path_note = xexists(nowTitle, aim="file", reason="获取笔记路径，用于改名")
                         newPath = delSuf(path_note, path_note.split("/")[-1]) + aimTitle + ".md"
                         os.rename(path_note, newPath)
