@@ -280,7 +280,7 @@ def bilibili_to_ob(path_one, item):
         p = 0
         for anEP in eps:
             if epTitle == anEP['epData']['title']:
-                anEP['epSingleVideos'].append(data)  #向合集数据中添加关于此单独收藏的视频的信息
+                anEP['epSingleVideos'].append(bvid)  #向合集数据中添加关于此单独收藏的视频的信息
                 p += 1
         if p == 0:
             eps.append({'epData': epData , 'epSingleVideos': [bvid] , 'epPath': path_one})  #是否拷贝赋值
@@ -294,7 +294,7 @@ def bilibili_to_ob(path_one, item):
         path_ep = xexists(epTitle, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
         path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
         #单个视频的笔记已存在且需要被移动
-        if oriRoute and epTitle in epList and not path_epNote in oriRoute:
+        if oriRoute and (epTitle in epList) and not path_epNote in oriRoute:
             print("移动："+oriRoute+"==>"+path_epNote)
             nowTitle = delSuf(oriRoute.split("/")[-1],".md")  #移动前的标题
             '''
