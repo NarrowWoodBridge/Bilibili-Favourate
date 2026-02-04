@@ -106,7 +106,7 @@ def readfile(file):
         return [i.rstrip("\n") for i in lines if i!="\n"]
 #获取全收藏合集的列表、新增全收藏合集的列表
 epset = "{}/全收藏合集.md".format(settings)
-epList = readfile(epset)
+fullEpList = readfile(epset)
 
 #读取cookies，取得header
 cookie = open("{}/cookies.md".format(settings), 'r', encoding="utf-8").read()
@@ -188,7 +188,7 @@ def readmdfile(lines,splitList):
     ret = [[]]
     for line in lines:
         line = line.rstrip("\n")
-        if len(splitList) != 0 and line == splitList[0]:
+        if len(splitList) != 0 and line == splitList[0]:  #如果一级标题改成二级呢？
             splitList.pop(0)
             ret.append([])
             continue
@@ -205,35 +205,37 @@ def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
     #公有字段
     title = db['title']; upper = db['upper']
     #判断笔记是否已经存在，不存在则创建
-    if not xexists(title, aim="file", reason="新建文件：判断文件是否存在"):
-        mkdir(path)
-        if not title_file:
-            title_file = title
-        with open('{}/{}.md'.format(path, title_file), 'w', encoding="utf-8") as f:
-            #字段：根据情况添加，若db中有，就添加，反之亦然
-            f.write('---\n')
+    if xexists(title, aim="file", reason="新建文件：判断文件是否存在"):
+        return
+    
+    mkdir(path)
+    if not title_file:
+        title_file = title
+    with open('{}/{}.md'.format(path, title_file), 'w', encoding="utf-8") as f:
+        #字段：根据情况添加，若db中有，就添加，反之亦然
+        f.write('---\n')
+        if checkbox:
+            f.write('target: tasks\nstatus: in progress\ntags: bilibili\n')
+        write_keys(f, db, ['类型','bvid','title','upper','cover'])  #简化
+        f.write('---\n')
+        #封面也根据有无来添加
+        if 'cover' in db:
+            f.write('![]({})\n'.format(db['cover']))
+        #处理和添加视频链接
+        f.write('# 视频\n')
+        if videoList:
+            f.write(videoList)
+        elif 'bvid' in db:
+            video_url = 'https://www.bilibili.com/video/{}'.format(db['bvid'])
+            if page:  #多page视频中的具体page
+                video_url += '?p={}'.format(page)
+            line = '[{}]({})\n'.format(title, video_url)
             if checkbox:
-                f.write('target: tasks\nstatus: in progress\ntags: bilibili\n')
-            write_keys(f, db, ['类型','bvid','title','upper','cover'])  #简化
-            f.write('---\n')
-            #封面也根据有无来添加
-            if 'cover' in db:
-                f.write('![]({})\n'.format(db['cover']))
-            #处理和添加视频链接
-            f.write('# 视频\n')
-            if videoList:
-                f.write(videoList)
-            elif 'bvid' in db:
-                video_url = 'https://www.bilibili.com/video/{}'.format(db['bvid'])
-                if page:  #多page视频中的具体page
-                    video_url += '?p={}'.format(page)
-                line = '[{}]({})\n'.format(title, video_url)
-                if checkbox:
-                    line = "- [ ] " + line
-                f.write(line)
-            #添加笔记区
-            f.write('# 笔记\n')
-            f.write(note)
+                line = "- [ ] " + line
+            f.write(line)
+        #添加笔记区
+        f.write('# 笔记\n')
+        f.write(note)
 
 def bilibili_to_ob(path_one, item):
     #爬取一个收藏夹项目
@@ -294,7 +296,7 @@ def bilibili_to_ob(path_one, item):
         path_ep = xexists(epTitle, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
         path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
         #单个视频的笔记已存在且需要被移动
-        if oriRoute and (epTitle in epList) and not path_epNote in oriRoute:
+        if oriRoute and (epTitle in fullEpList) and not path_epNote in oriRoute:
             print("移动："+oriRoute+"==>"+path_epNote)
             nowTitle = delSuf(oriRoute.split("/")[-1],".md")  #移动前的标题
             '''
@@ -380,10 +382,10 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
             title2 = title2Dict[item]
             f = 1  #旗标，1表示未添加
             for num, had in enumerate(B):
-                if item in had or title in had or (title in renamed and renamed[title][1] in had):  #此项已有，无需新增
+                if (item in had) or (title in had) or (title in renamed and renamed[title][1] in had):  #此项已有，无需新增
                     f = 0
                     if item in had:  #(item为视频的bvid)链接类型为网页链接(这是转换链接类型的前提)
-                        if item in singlelist or opt == 0:  #需要转换类型的链接(网页链接->超链接)
+                        if (item in singlelist) or (opt == 0):  #需要转换类型的链接(网页链接->超链接)
                             state = had[:6]
                             if opt == 1:
                                 #新增：此合集中被收藏的视频
@@ -392,7 +394,7 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                                 #新建笔记
                                 B[num] = state + "[[" + title2 + "]]"
             if f:  #当前文件中不存在的视频项目的链接，也就是更新后新出现的视频的链接
-                if item in singlelist or opt == 0:
+                if (item in singlelist) or (opt == 0):
                     if opt == 1:
                         #①之前收藏的视频(笔记可被改名)/②上次刷新后新收藏的视频(未创建笔记)-->被此合集收录
                         #①单个视频的笔记不需要移动，也不需要改名，但要获取它的标题/②新建
@@ -478,7 +480,7 @@ for anEP in eps:  #anEP有三个键：'epData', 'epSingleVideos' , 'epPath'
     #被单独收藏的视频的bvid列表
     singlelist = anEP['epSingleVideos']
 
-    if epTitle in epList:  #全收藏的视频合集
+    if epTitle in fullEpList:  #全收藏的视频合集
         mkdir(path_three)
         print(">>全收藏："+epTitle)
         #更新目录文件.md
