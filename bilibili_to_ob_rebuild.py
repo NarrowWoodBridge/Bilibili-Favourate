@@ -429,8 +429,11 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
 
                         #笔记文件名->超链接别名(aimTitle)
                         path_note = xexists(nowTitle, aim="file", reason="获取笔记路径，用于改名")
-                        newPath = delSuf(path_note, path_note.split("/")[-1]) + aimTitle + ".md"
+                        print("改名："+path_note+"==>"+aimTitle)
+                        oriFolder = delSuf(path_note, path_note.split("/")[-1])[:-1]
+                        newPath = "{}/{}.md".format(oriFolder, aimTitle)
                         os.rename(path_note, newPath)
+                        renamed[nowTitle] = [oriFolder, aimTitle]  #记录改名
 
                     B[num] = state + "[[{}]]".format(aimTitle)
 
