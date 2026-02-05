@@ -297,7 +297,7 @@ def bilibili_to_ob(path_one, item):
         path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
         #单个视频的笔记已存在且需要被移动
         if oriRoute and (epTitle in fullEpList) and not path_epNote in oriRoute:
-            print("移动："+oriRoute+"==>"+path_epNote)
+            print("移动(实则重建)："+oriRoute+" ==> "+path_epNote)
             nowTitle = delSuf(oriRoute.split("/")[-1],".md")  #移动前的标题
             '''
             if nowTitle == title:  #若笔记标题为视频原标题(未修改)，则将其改名为其在合集中的第二标题
@@ -417,6 +417,7 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                     nowTitle = had[8:].split("|")[0]
                     aimTitle = had.split("|")[1][:-2]
                     aimTitle = xreplace(aimTitle)  #别名可能含有特殊字符
+                    #改名笔记我们就用改名后的标题，未改名就重命名为超链接别名
                     p = 1  #旗标，1表示此笔记名称未被人为修改
                     for oriTitle in renamed:
                         if renamed[oriTitle][1] == nowTitle:  #“可能是”被改过名的单个视频笔记，需进一步确认
@@ -428,8 +429,9 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                         #此时的nowTitle就是对应视频的原标题
 
                         #笔记文件名->超链接别名(aimTitle)
-                        path_note = xexists(nowTitle, aim="file", reason="获取笔记路径，用于改名")
-                        print("改名："+path_note+"==>"+aimTitle)
+                        path_note = xexists(nowTitle, aim="file", reason="获取笔记路径，用于改名")  #!!!默认能找到，没考虑重复文件的全路径链接情况
+                        # print("改名："+path_note+"==>"+aimTitle)
+                        print("改名："+nowTitle+" ==> "+aimTitle)
                         oriFolder = delSuf(path_note, path_note.split("/")[-1])[:-1]
                         newPath = "{}/{}.md".format(oriFolder, aimTitle)
                         os.rename(path_note, newPath)
