@@ -176,7 +176,8 @@ def mkdir(path):
         pass
 
 #将字符串列表组合成一个字符串
-def addStrs(aList, opt=0):
+def addStrs(aList, opt=False):
+    #opt表示是否添加末尾换行符，默认不添加
     ret = ""
     for line in aList:
         ret += line+"\n"
@@ -188,7 +189,7 @@ def readmdfile(lines,splitList):
     ret = [[]]
     for line in lines:
         line = line.rstrip("\n")
-        if len(splitList) != 0 and line == splitList[0]:  #如果一级标题改成二级呢？
+        if len(splitList) != 0 and (splitList[0] in line):  #如果一级标题改成二级呢？
             splitList.pop(0)
             ret.append([])
             continue
@@ -321,7 +322,7 @@ def bilibili_to_ob(path_one, item):
             os.remove(newPath)
             #写入
             db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
-            single(db, path_epNote, note=addStrs(C), title_file=nowTitle)
+            single(db, path_epNote, videoList=addStrs(B,1), note=addStrs(C), title_file=nowTitle)
 
 def get_id():
     # 获取mid
