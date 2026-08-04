@@ -1,3 +1,4 @@
+原作者仓库：[GitHub - nimamxd25/Obsidian-PythonScript](https://github.com/nimamxd25/Obsidian-PythonScript)
 # Obsidian-PythonScript
 ### 同步B站视频收藏夹到Obsidian中进行学习
 [教你一键把B站视频收藏夹同步到Obsidian中_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1C34y177We)
