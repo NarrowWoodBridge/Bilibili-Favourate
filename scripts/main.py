@@ -1,3 +1,7 @@
+from models import *
+from tools_file import *
+from tools_str import *
+
 import requests
 import re
 import json
@@ -5,50 +9,46 @@ from pprint import *
 import os
 import shutil
 
-settings = "功能性文件"  #配置文件所在的文件夹
-vroot = "B站视频"  #储存所有视频笔记的文件夹
+config = Config(
+    settings = "功能性文件",  #配置文件所在的文件夹
+    vroot = "B站视频"  #储存所有视频笔记的文件夹
+)
 
 infoDict = {}  #key为bvid，value为视频信息组成的字典{'title':xx, 'upper':xx......}
 eps = []  #视频合集最后再一起处理
 renamed = {}  #重命名的文件记录字典，key为原始标题，value为[文件夹路径，修改后的标题]
 
-#字符串：删后缀
-def delSuf(self: str, suffix: str) -> str:
-    if suffix and self.endswith(suffix):
-        return self[:-len(suffix)]
-    else:
-        return self[:]
-
 #获取之前记录的信息
-#1.读取infoDict.json
-json_save = '{}/infoDict.json'.format(settings)
-if os.path.exists(json_save):
-    with open(json_save) as f:
-        infoDict = json.load(f)
-#2.1.获取md文件列表
-mdfiles = []
-for root,dirs,files in os.walk(vroot):
-    for file in files:
-        if len(file) > 3 and file[-3:] == ".md":
-            mdfiles.append(root.replace("\\","/")+"/"+file)
-#2.2.读取文件信息
-for filePath in mdfiles:
-    lastData = {}
-    title = delSuf(filePath.split("/")[-1], ".md")
-    fileDirPath = delSuf(filePath,"/{}.md".format(title))
-    with open(filePath,"r",encoding="UTF-8") as mdfile:
-        useful = ["类型","bvid","title","upper","cover"]  #有用字段
-        lines = mdfile.read().split("---\n")[1].rstrip("\n").split("\n")
-        for line in lines:
-            key = line.split(": ")[0]
-            if key in useful:
-                lastData[key] = line.split(": ")[1].rstrip("\n")
-    if "title" in lastData:
-        titleNow = lastData['title']
-        if titleNow != title:  #此时的title为修改后的标题，lastData['title']为原始标题
-            renamed[lastData['title']] = [fileDirPath,title]
-print(renamed)
-print("原有信息读取完毕")
+def load_state():
+    #1.读取infoDict.json
+    if os.path.exists(config.json_save):
+        with open(config.json_save) as f:
+            global infoDict
+            infoDict = json.load(f)
+    #2.1.获取md文件列表
+    mdfiles = []  #局部
+    for root,dirs,files in os.walk(config.vroot):
+        for file in files:
+            if len(file) > 3 and file[-3:] == ".md":
+                mdfiles.append(root.replace("\\","/")+"/"+file)
+    #2.2.读取文件信息
+    for filePath in mdfiles:
+        lastData = {}
+        title = delSuf(filePath.split("/")[-1], ".md")
+        fileDirPath = delSuf(filePath,"/{}.md".format(title))
+        with open(filePath,"r",encoding="UTF-8") as mdfile:
+            useful = ["类型","bvid","title","upper","cover"]  #有用字段
+            lines = mdfile.read().split("---\n")[1].rstrip("\n").split("\n")
+            for line in lines:
+                key = line.split(": ")[0]
+                if key in useful:
+                    lastData[key] = line.split(": ")[1].rstrip("\n")
+        if "title" in lastData:
+            titleNow = lastData['title']
+            if titleNow != title:  #此时的title为修改后的标题，lastData['title']为原始标题
+                renamed[lastData['title']] = [fileDirPath,title]
+    print(renamed)
+    print("原有信息读取完毕")
 
 #根据bvid查询视频信息
 def search(bvid, aim, reason=""):
@@ -60,7 +60,7 @@ def search(bvid, aim, reason=""):
         return infoDict[bvid][aim]
     #获取信息
     new_url = 'https://api.bilibili.com/x/web-interface/view?bvid={}'.format(bvid)
-    vid = json.loads(requests.get(url=new_url, headers=headers).text)
+    vid = json.loads(requests.get(url=new_url, headers=config.headers).text)
     if('data' not in vid):
         print("!!!查询失败：("+reason+")bvid="+bvid)
         return None
@@ -97,50 +97,10 @@ def search(bvid, aim, reason=""):
         return infoDict[bvid]
     return infoDict[bvid][aim]
 
-#按行读取，存为列表
-def readfile(file):
-    with open(file,"r",encoding="UTF-8") as f:
-        lines = f.readlines()
-        return [i.rstrip("\n") for i in lines if i!="\n"]
-#获取全收藏合集的列表、新增全收藏合集的列表
-epset = "{}/全收藏合集.md".format(settings)
-fullEpList = readfile(epset)
-
-#读取cookies，取得header
-cookie = open("{}/cookies.md".format(settings), 'r', encoding="utf-8").read()
-headers = {
-    'referer': 'https://space.bilibili.com',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
-    'cookie': cookie
-}
-
-#替换特殊字符
-def xreplace(string):
-    numOfYinhao = 0
-    for char in string:
-        if char == '“' or char == '”' or char == '"':
-            numOfYinhao += 1
-    if numOfYinhao == 2:
-        out = ""
-        numOfYinhao = 0
-        for char in string:
-            if char == '“' or char == '”' or char == '"':
-                if numOfYinhao == 0:
-                    char = "“"
-                    numOfYinhao += 1
-                else:
-                    char = "”"
-            out += char
-        string = out
-    elif numOfYinhao > 2:
-        pass
-        #print("================"+string)
-    return string.replace('/','-').replace('|','｜').replace(':','：').replace('?','？').replace('<','【').replace('>','】').replace('[','【').replace(']','】')
-
 #判断md文件/文件夹是否存在与某个目录或其子目录下
 #若不存在，则返回false
 #存在时，aim=none时返回True，aim=file时返回文件路径，aim=dir时返回目录路径
-def xexists(name, aim="none", start=vroot, limit=False, reason=""):
+def xexists(name, aim="none", start=config.vroot, limit=False, reason=""):
     for root, dirs, files in os.walk(start):
         root = root.replace("\\","/")
         if aim != "dir":
@@ -164,35 +124,6 @@ def xexists(name, aim="none", start=vroot, limit=False, reason=""):
             return False
     print("不存在："+name+" ({})".format(reason))
     return False
-
-#如果目录不存在则创建目录
-def mkdir(path):
-    folder = os.path.exists(path)
-    if not folder:
-        os.makedirs(path)
-    else:
-        pass
-
-#将字符串列表组合成一个字符串
-def addStrs(aList, opt=False):
-    #opt表示是否添加末尾换行符，默认不添加
-    ret = ""
-    for line in aList:
-        ret += line+"\n"
-    if not opt:
-        ret = ret[:-1]  #去掉末尾换行符
-    return ret
-
-def readmdfile(lines,splitList):
-    ret = [[]]
-    for line in lines:
-        line = line.rstrip("\n")
-        if len(splitList) != 0 and (splitList[0] in line):  #如果一级标题改成二级呢？
-            splitList.pop(0)
-            ret.append([])
-            continue
-        ret[-1].append(line)
-    return ret
 
 def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
     #checkbox表示是否需要勾选框
@@ -296,7 +227,7 @@ def bilibili_to_ob(path_one, item):
         path_ep = xexists(epTitle, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
         path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
         #单个视频的笔记已存在且需要被移动
-        if oriRoute and (epTitle in fullEpList) and not path_epNote in oriRoute:
+        if oriRoute and (epTitle in config.fullEpList) and not path_epNote in oriRoute:
             print("移动(实则重建)："+oriRoute+" ==> "+path_epNote)
             nowTitle = delSuf(oriRoute.split("/")[-1],".md")  #移动前的标题
             '''
@@ -323,14 +254,14 @@ def bilibili_to_ob(path_one, item):
             db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
             single(db, path_epNote, videoList=addStrs(B,1), note=addStrs(C), title_file=nowTitle)
 
-def get_id():
+def getFavFolders():
     # 获取mid
     url = 'https://api.bilibili.com/x/web-interface/nav'
-    json_data = json.loads(requests.get(url=url, headers=headers).text)
+    json_data = json.loads(requests.get(url=url, headers=config.headers).text)
     mid = json_data['data']['mid']
     # 获取
     url = 'https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid={}&jsonp=jsonp'.format(mid)
-    json_data = json.loads(requests.get(url=url, headers=headers).text)
+    json_data = json.loads(requests.get(url=url, headers=config.headers).text)
 
     favorites_list = json_data['data']['list']  #获取所有收藏夹的元数据
     favData = {}
@@ -340,30 +271,6 @@ def get_id():
         count = i['media_count']
         favData[favFolderTitle] = {'id': id_ , 'count': count}  #title作为键，id和count作为值
     return favData
-
-favFolders = get_id()  #存储账号上所有收藏夹的信息
-
-#获取要抓取的收藏夹的名称
-settings2 = "{}/Python脚本设置.md".format(settings)
-setting = str(open(settings2, 'r', encoding="utf-8").read()).replace('\n','').replace(' ','')  #读取并替换换行和空格
-names = re.findall('##B站同步文件夹(.*?)##', setting)[0].split('-[]')  #正则匹配并列出列表(第一项为空字符串)
-names = [i for i in names if i != '']  #去除空项目
-
-#遍历要同步的b站收藏夹，对收藏夹内视频进行“to-ob”的操作
-for favFolderName in names:
-    path_one = '{}/{}'.format(vroot, favFolderName)  #本地收藏夹路径
-    print("----------"+favFolderName)
-    id_ = favFolders[favFolderName]['id']
-    count = favFolders[favFolderName]['count']  #收藏夹内视频数量
-    num_page = int(count/20)+1  #每20个视频分为一组，求出一共多少组
-    for i in range(num_page):
-        url = 'https://api.bilibili.com/x/v3/fav/resource/list?media_id={}&pn={}&ps=20&keyword=&order=mtime&type=0&tid=0&platform=web&jsonp=jsonp'.format(id_, i+1)
-        #爬取同步收藏夹内容
-        response = requests.get(url=url, headers=headers)
-        json_data = json.loads(response.text)
-        medias = json_data['data']['medias']
-        for item in medias:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
-            bilibili_to_ob(path_one, item)
 
 #更新合集目录中的视频清单
 def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={}):
@@ -459,53 +366,85 @@ def batchSingleNote(alist, path, checkbox=0, title2Dict={}):
         db = {'类型':'single-ep','bvid':bvid,'title':title,'upper':upper,'cover':cover}
         single(db, path, checkbox=checkbox, title_file=title2)
 
-#处理合集
-for anEP in eps:  #anEP有三个键：'epData', 'epSingleVideos' , 'epPath'
-    epData = anEP['epData']
-    #epData有：title,cover(合集目录已有，这里用不上),epVideoList(合集中视频的信息列表)
-    epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
+def main():
+    load_state()  #加载缓存数据和文件重命名信息
 
-    #md目录文件的路径
-    mdfileroute = xexists(epTitle,aim="file", reason="处理合集：获取目录路径")
-    #文件夹的路径
-    path_one = anEP['epPath']
-    path_ep = delSuf(mdfileroute,"/"+mdfileroute.split("/")[-1])
-    path_three = '{}/{}'.format(path_ep,'笔记')
+    favFolders = getFavFolders()  #存储账号上所有收藏夹的信息
 
-    #获取最新的合集中的视频bvid列表
-    epVideoList = epData['epVideoList']
-    aimlist = [i['bvid'] for i in epVideoList]
-    #合集中视频的第二标题
-    title2Dict = {}
-    for epVideo in epVideoList:
-        bvid = epVideo['bvid']
-        title2 = xreplace(epVideo['title'])
-        if len(title2) >= 24:
-            title = search(bvid=bvid, aim="title", reason="获取标题，用于和第二标题比较")
-            if len(title) > len(title2) and title.startswith(title2):
-                title2 = title  #被砍剩下一半的标题谁爱用谁用去吧！
-        title2Dict[bvid] = title2
-    #被单独收藏的视频的bvid列表
-    singlelist = anEP['epSingleVideos']
+    #获取要抓取的收藏夹的名称
+    script_setting_file = "{}/Python脚本设置.md".format(config.settings)
+    script_setting = str(open(script_setting_file, 'r', encoding="utf-8").read()).replace('\n','').replace(' ','')  #读取并替换换行和空格
+    names = re.findall('##B站同步文件夹(.*?)##', script_setting)[0].split('-[]')  #正则匹配并列出列表(第一项为空字符串)
+    names = [i for i in names if i != '']  #去除空项目
 
-    if epTitle in fullEpList:  #全收藏的视频合集
-        mkdir(path_three)
-        print(">>全收藏："+epTitle)
-        #更新目录文件.md
-        updateList(mdfileroute, path_ep, aimlist, opt=0, title2Dict=title2Dict)
-        #单个视频的笔记
-        batchSingleNote(aimlist, path_three, title2Dict=title2Dict)
-    else:  #部分收藏的视频合集
-        mkdir(path_ep)
-        print(">>部分收藏："+epTitle)
-        #更新目录文件.md
-        updateList(mdfileroute, path_ep, aimlist, opt=1, singlelist=singlelist, title2Dict=title2Dict)
-        #单个视频的笔记
-        batchSingleNote(singlelist, path_one, checkbox=1)
+    #遍历要同步的b站收藏夹，对收藏夹内视频进行“to-ob”的操作
+    for favFolderName in names:
+        path_one = '{}/{}'.format(config.vroot, favFolderName)  #本地收藏夹路径
+        print("----------"+favFolderName)
+        if not favFolderName in favFolders:
+            print("不存在此收藏夹："+favFolderName)
+            continue
+        id_ = favFolders[favFolderName]['id']
+        count = favFolders[favFolderName]['count']  #收藏夹内视频数量
+        num_page = int(count/20)+1  #每20个视频分为一组，求出一共多少组
+        for i in range(num_page):
+            url = 'https://api.bilibili.com/x/v3/fav/resource/list?media_id={}&pn={}&ps=20&keyword=&order=mtime&type=0&tid=0&platform=web&jsonp=jsonp'.format(id_, i+1)
+            #爬取同步收藏夹内容
+            response = requests.get(url=url, headers=config.headers)
+            json_data = json.loads(response.text)
+            medias = json_data['data']['medias']
+            for item in medias:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
+                bilibili_to_ob(path_one, item)
 
-#储存当前已抓取的信息字典
-#字典转换
-infoJson = json.dumps(infoDict, sort_keys=False, indent=4, separators=(',', ': '))
-#字典储存
-with open(json_save,"w") as f_save:
-    f_save.write(infoJson)
+    #处理合集
+    for anEP in eps:  #anEP有三个键：'epData', 'epSingleVideos' , 'epPath'
+        epData = anEP['epData']
+        #epData有：title,cover(合集目录已有，这里用不上),epVideoList(合集中视频的信息列表)
+        epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
+
+        #md目录文件的路径
+        mdfileroute = xexists(epTitle,aim="file", reason="处理合集：获取目录路径")
+        #文件夹的路径
+        path_one = anEP['epPath']
+        path_ep = delSuf(mdfileroute,"/"+mdfileroute.split("/")[-1])
+        path_three = '{}/{}'.format(path_ep,'笔记')
+
+        #获取最新的合集中的视频bvid列表
+        epVideoList = epData['epVideoList']
+        aimlist = [i['bvid'] for i in epVideoList]
+        #合集中视频的第二标题
+        title2Dict = {}
+        for epVideo in epVideoList:
+            bvid = epVideo['bvid']
+            title2 = xreplace(epVideo['title'])
+            if len(title2) >= 24:
+                title = search(bvid=bvid, aim="title", reason="获取标题，用于和第二标题比较")
+                if len(title) > len(title2) and title.startswith(title2):
+                    title2 = title  #被砍剩下一半的标题谁爱用谁用去吧！
+            title2Dict[bvid] = title2
+        #被单独收藏的视频的bvid列表
+        singlelist = anEP['epSingleVideos']
+
+        if epTitle in config.fullEpList:  #全收藏的视频合集
+            mkdir(path_three)
+            print(">>全收藏："+epTitle)
+            #更新目录文件.md
+            updateList(mdfileroute, path_ep, aimlist, opt=0, title2Dict=title2Dict)
+            #单个视频的笔记
+            batchSingleNote(aimlist, path_three, title2Dict=title2Dict)
+        else:  #部分收藏的视频合集
+            mkdir(path_ep)
+            print(">>部分收藏："+epTitle)
+            #更新目录文件.md
+            updateList(mdfileroute, path_ep, aimlist, opt=1, singlelist=singlelist, title2Dict=title2Dict)
+            #单个视频的笔记
+            batchSingleNote(singlelist, path_one, checkbox=1)
+
+    #储存当前已抓取的信息字典
+    #字典转换
+    infoJson = json.dumps(infoDict, sort_keys=False, indent=4, separators=(',', ': '))
+    #字典储存
+    with open(config.json_save,"w") as f_save:
+        f_save.write(infoJson)
+
+main()

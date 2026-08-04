@@ -52,7 +52,7 @@ python scripts/main.py
 
 必需。文件内容会被原样放入请求头的 `cookie` 字段。只写 Cookie 值，不要添加 Markdown 标题或代码块。
 
-Cookie 属于敏感凭据，不应提交到 Git、粘贴到日志或对外分享。Cookie 失效后，`get_id()` 等请求将无法取得账号数据。
+Cookie 属于敏感凭据，不应提交到 Git、粘贴到日志或对外分享。Cookie 失效后，`getFavFolders()` 等请求将无法取得账号数据。
 
 #### `功能性文件/Python脚本设置.md`
 
@@ -71,7 +71,7 @@ Cookie 属于敏感凭据，不应提交到 Git、粘贴到日志或对外分享
 
 - `## B站同步文件夹` 后必须还有一个 `##` 二级标题，用来结束匹配区间。
 - 当前解析器只以去空格后的 `-[]` 分隔项目，因此必须使用 `- [ ]`；写成 `- [x]` 会得到错误的收藏夹名称。
-- `get_id()` 会删除收藏夹标题中的所有非中文字符；配置名称必须与处理后的标题完全一致，否则访问 `favFolders[favFolderName]` 时会触发 `KeyError`。
+- `getFavFolders()` 会删除收藏夹标题中的所有非中文字符；配置名称必须与处理后的标题完全一致，否则访问 `favFolders[favFolderName]` 时会触发 `KeyError`。
 
 #### `功能性文件/全收藏合集.md`
 
@@ -317,7 +317,7 @@ tags: bilibili
 
 副作用包括创建目录和文件、更新 `eps`/`renamed`、移动并重写已有笔记。
 
-### `get_id() -> dict`
+### `getFavFolders() -> dict`
 
 获取当前 Cookie 对应账号创建的所有收藏夹元数据。
 
@@ -398,7 +398,7 @@ cover: https://example.com/cover.jpg
 1. 读取 `infoDict.json`。
 2. 扫描 `vroot` 下已有 Markdown，通过 YAML `title` 与文件名建立 `renamed`。
 3. 读取全收藏合集列表和 Cookie，建立请求头。
-4. 调用 `get_id()` 获取账号收藏夹。
+4. 调用 `getFavFolders()` 获取账号收藏夹。
 5. 从 `Python脚本设置.md` 解析待同步收藏夹名称。
 6. 每 20 条分页请求 `/x/v3/fav/resource/list`，逐条调用 `bilibili_to_ob()`。
 7. 遍历 `eps`，更新合集目录并批量创建视频笔记。
