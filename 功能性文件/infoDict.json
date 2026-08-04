@@ -1,14 +1,4 @@
 {
-    "BV1uS4y1Q7UZ": {
-        "type": "pages",
-        "title": "\u3010\u5f00\u6e90\u3011Win \u548c Linux \u5feb\u901f\u4e92\u76f8\u91cd\u542f\u795e\u5668\uff0c\u8de8\u5e73\u53f0 EFI \u542f\u52a8\u9879\u7ba1\u7406\u5668 - \u4e00\u4e2a\u8f6f\u4ef6\u5b89\u5168\u89e3\u51b3\u4f60\u7684\u6240\u6709\u591a\u7cfb\u7edf\u542f\u52a8\u96be\u9898",
-        "upper": "\u8bfa\u5947\u7684\u70bc\u91d1\u5de5\u574a",
-        "cover": "http://i0.hdslb.com/bfs/archive/ebcfb23a9e7663e7df190b5a8ca608fa24578920.jpg",
-        "pages": [
-            "\u4ecb\u7ecd\u4e0e\u6f14\u793a",
-            "\u539f\u7406"
-        ]
-    },
     "BV1ba41157j2": {
         "type": "single",
         "title": "\u201c\u6709\u65f6\u5019\uff0c\u53ea\u662f\u9700\u898120\u79d2\u949f\u7684\u52c7\u6c14\u201d",
@@ -20,17 +10,6 @@
         "title": "\u9489\u9489 \u76f4\u64ad \u56de\u653e \u4e0b\u8f7d",
         "upper": "\u7981\u5c0f\u66f8",
         "cover": "http://i2.hdslb.com/bfs/archive/0d8a1daaaca58752c9634fbdaea3aacbc0b13974.jpg"
-    },
-    "BV1NK411K76u": {
-        "type": "pages",
-        "title": "\u6559\u5927\u5bb6\u5982\u4f55\u83b7\u53d6\u95ee\u5377\u661f\u7684\u6b63\u786e\u7b54\u68482.0\u5173\u4e8e\u65e0\u6cd5\u590d\u5236\u7684\u89e3\u51b3\u65b9\u6848",
-        "upper": "\u4e00\u53ea\u5495\u5495\u9c7c",
-        "cover": "http://i0.hdslb.com/bfs/archive/818531e51d55c28657da28043a696e592a71c932.jpg",
-        "pages": [
-            "bandicam 2020-09-04 13-40-33-948",
-            "\u63d0\u53d6\u771f\u5b9eid",
-            "\u63d0\u53d6\u771f\u5b9eid2"
-        ]
     },
     "BV16A411q7QP": {
         "type": "single",
@@ -857,5 +836,41 @@
         "title": "\u30102026\u84dd\u7259\u8033\u673a\u63a8\u8350\u3011\u5168\u81ea\u8d39\u5b9e\u6d4b\uff01\u5165\u8033\u5f0f-\u534a\u5165\u8033-\u8033\u5939\u5f0f-\u624b\u673a\u5382-HIFI\u5382\u8033\u673a\u63a8\u8350\uff01\u4e0d\u6070\u996d\u65e0\u5e7f\uff01\u5168\u4ef7\u4f4d\u5404\u5927\u54c1\u724c\u5bf9\u6bd4\uff01\u5efa\u8bae\u6536\u85cf\uff01",
         "upper": "\u8bf7\u8033\u6735\u5403\u987f\u597d\u7684",
         "cover": "http://i2.hdslb.com/bfs/archive/bd7f7ddc2c490f196bbe80e5b53bb5b6721cc8c1.jpg"
+    },
+    "BV1uS4y1Q7UZ": {
+        "type": "pages",
+        "title": "\u3010\u5f00\u6e90\u3011Win \u548c Linux \u5feb\u901f\u4e92\u76f8\u91cd\u542f\u795e\u5668\uff0c\u8de8\u5e73\u53f0 EFI \u542f\u52a8\u9879\u7ba1\u7406\u5668 - \u4e00\u4e2a\u8f6f\u4ef6\u5b89\u5168\u89e3\u51b3\u4f60\u7684\u6240\u6709\u591a\u7cfb\u7edf\u542f\u52a8\u96be\u9898",
+        "upper": "\u8bfa\u5947\u7684\u70bc\u91d1\u5de5\u574a",
+        "cover": "http://i0.hdslb.com/bfs/archive/ebcfb23a9e7663e7df190b5a8ca608fa24578920.jpg",
+        "pages": [
+            {
+                "page": 1,
+                "part": "\u4ecb\u7ecd\u4e0e\u6f14\u793a"
+            },
+            {
+                "page": 2,
+                "part": "\u539f\u7406"
+            }
+        ]
+    },
+    "BV1NK411K76u": {
+        "type": "pages",
+        "title": "\u6559\u5927\u5bb6\u5982\u4f55\u83b7\u53d6\u95ee\u5377\u661f\u7684\u6b63\u786e\u7b54\u68482.0\u5173\u4e8e\u65e0\u6cd5\u590d\u5236\u7684\u89e3\u51b3\u65b9\u6848",
+        "upper": "\u4e00\u53ea\u5495\u5495\u9c7c",
+        "cover": "http://i0.hdslb.com/bfs/archive/818531e51d55c28657da28043a696e592a71c932.jpg",
+        "pages": [
+            {
+                "page": 1,
+                "part": "bandicam 2020-09-04 13-40-33-948"
+            },
+            {
+                "page": 2,
+                "part": "\u63d0\u53d6\u771f\u5b9eid"
+            },
+            {
+                "page": 3,
+                "part": "\u63d0\u53d6\u771f\u5b9eid2"
+            }
+        ]
     }
 }

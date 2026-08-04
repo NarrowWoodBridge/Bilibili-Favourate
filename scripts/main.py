@@ -78,9 +78,7 @@ def search(bvid, aim, reason=""):
         else:
             infoDict[bvid]['type'] = "pages"
             pages = data['pages']
-            infoDict[bvid]['pages'] = [ xreplace(i['part']) for i in pages]
-            for i in pages:
-                page_name = xreplace(i['part'])
+            infoDict[bvid]['pages'] = [ {'page':i['page'],'part':xreplace(i['part'])} for i in pages]
     else:
         infoDict[bvid]['type'] = "ep"
         epDataOri = data['ugc_season']
@@ -263,6 +261,7 @@ def bilibili_to_ob(path_one, item):
             mkdir(path_three)
             videoList = ""
             for i in pages:
+                # page_num = i['page']  #分页序号
                 page_name = xreplace(i['part'])
                 videoList += '- [ ] [[{}]]\n'.format(page_name)
                 #单个视频的笔记
