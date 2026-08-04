@@ -100,7 +100,7 @@ def search(bvid, aim, reason=""):
 #判断md文件/文件夹是否存在与某个目录或其子目录下
 #若不存在，则返回false
 #存在时，aim=none时返回True，aim=file时返回文件路径，aim=dir时返回目录路径
-def xexists(name, aim="none", start=config.vroot, limit=False, reason=""):
+def xexists(name, start, aim="none", limit=False, reason=""):
     for root, dirs, files in os.walk(start):
         root = root.replace("\\","/")
         if aim != "dir":
@@ -114,7 +114,7 @@ def xexists(name, aim="none", start=config.vroot, limit=False, reason=""):
         if aim != "file":
             for adir in dirs:
                 path = root+"/"+adir
-                if adir == name or xexists(name, aim="file", start=path, limit=1, reason="通过确认目录.md来确认合集文件夹"):
+                if adir == name or xexists(name, start=path, aim="file", limit=1, reason="通过确认目录.md来确认合集文件夹"):
                     if adir != name:
                         print("文件夹被改名："+name+"->"+adir+" ({})".format(reason))
                     if aim == "dir":
@@ -135,7 +135,7 @@ def single(db , path, checkbox=0, page=0, videoList="", note="", title_file=""):
     #公有字段
     title = db['title']; upper = db['upper']
     #判断笔记是否已经存在，不存在则创建
-    if xexists(title, aim="file", reason="新建文件：判断文件是否存在"):
+    if xexists(title, start=config.vroot, aim="file", reason="新建文件：判断文件是否存在"):
         return
     
     mkdir(path)
@@ -188,7 +188,7 @@ def bilibili_to_ob(path_one, item):
         path_two = '{}/【02.多Page】/{}'.format(path_one,title)
         path_three = '{}/{}'.format(path_two,'笔记')
         #判断[文件夹或目录文件]是否已经存在,如果不存在，则创建新目录和文件
-        if not xexists(title, aim="file"):
+        if not xexists(title, start=config.vroot, aim="file"):
             mkdir(path_three)
             videoList = ""
             for i in pages:
@@ -223,8 +223,8 @@ def bilibili_to_ob(path_one, item):
         single(db, path_two)
 
         #若【当前视频】从属于全收藏合集，则单个视频的笔记(存在的话)要移动到合集文件夹中
-        oriRoute = xexists(title, aim="file", reason="文件移动相关：获取视频路径")  #文件原路径，文件不存在则为False
-        path_ep = xexists(epTitle, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
+        oriRoute = xexists(title, start=config.vroot, aim="file", reason="文件移动相关：获取视频路径")  #文件原路径，文件不存在则为False
+        path_ep = xexists(epTitle, start=config.vroot, aim="dir", reason="文件移动相关：获取合集文件夹路径")  #合集文件夹路径
         path_epNote = path_ep+"/笔记"  #合集中的笔记文件夹
         #单个视频的笔记已存在且需要被移动
         if oriRoute and (epTitle in config.fullEpList) and not path_epNote in oriRoute:
@@ -306,7 +306,7 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                     if opt == 1:
                         #①之前收藏的视频(笔记可被改名)/②上次刷新后新收藏的视频(未创建笔记)-->被此合集收录
                         #①单个视频的笔记不需要移动，也不需要改名，但要获取它的标题/②新建
-                        ifExist_title = xexists(title, aim="file", reason="目录新增：被收藏的视频：获取视频路径以得到标题")
+                        ifExist_title = xexists(title, start=config.vroot, aim="file", reason="目录新增：被收藏的视频：获取视频路径以得到标题")
                         if ifExist_title:
                             title = delSuf(ifExist_title.split("/")[-1],".md")
                         B.append("- [ ] [[" + title + "|" + title2 + "]]")
@@ -336,7 +336,7 @@ def updateList(mdfileroute, path_ep, aimlist, opt=0, singlelist=[], title2Dict={
                         #此时的nowTitle就是对应视频的原标题
 
                         #笔记文件名->超链接别名(aimTitle)
-                        path_note = xexists(nowTitle, aim="file", reason="获取笔记路径，用于改名")  #!!!默认能找到，没考虑重复文件的全路径链接情况
+                        path_note = xexists(nowTitle, start=config.vroot, aim="file", reason="获取笔记路径，用于改名")  #!!!默认能找到，没考虑重复文件的全路径链接情况
                         # print("改名："+path_note+"==>"+aimTitle)
                         print("改名："+nowTitle+" ==> "+aimTitle)
                         oriFolder = delSuf(path_note, path_note.split("/")[-1])[:-1]
@@ -403,7 +403,7 @@ def main():
         epTitle = xreplace(epData['title'])  #合集标题  //!!注意字符替换
 
         #md目录文件的路径
-        mdfileroute = xexists(epTitle,aim="file", reason="处理合集：获取目录路径")
+        mdfileroute = xexists(epTitle, start=config.vroot,aim="file", reason="处理合集：获取目录路径")
         #文件夹的路径
         path_one = anEP['epPath']
         path_ep = delSuf(mdfileroute,"/"+mdfileroute.split("/")[-1])

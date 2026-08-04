@@ -21,4 +21,13 @@ class Config:
         }
         #获取全收藏合集的列表、新增全收藏合集的列表
         self.fullEpList = readfile("{}/全收藏合集.md".format(self.settings))
-    
+
+@dataclass
+class VideoInfo:
+    type: str = ""  #视频类型：单个视频/多page视频/视频合集
+    bvid: str = ""
+    title: str = ""
+    upper: str = ""
+    cover: str = ""  #封面
+    pages: list = field(default_factory=list)  #多page视频的每一页信息组成的列表
+    epData: dict = field(default_factory=dict)  #视频合集的元数据
