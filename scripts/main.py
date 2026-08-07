@@ -103,14 +103,8 @@ def main():
 
     favFolders = getFavFolders(user)  #存储账号上所有收藏夹的信息
 
-    #获取要抓取的收藏夹的名称
-    script_setting_file = "{}/Python脚本设置.md".format(config.settingsFolder)
-    script_setting = str(open(script_setting_file, 'r', encoding="utf-8").read()).replace('\n','').replace(' ','')  #读取并替换换行和空格
-    names = re.findall('##B站同步文件夹(.*?)##', script_setting)[0].split('-[]')  #正则匹配并列出列表(第一项为空字符串)
-    names = [i for i in names if i != '']  #去除空项目
-
     #遍历要同步的b站收藏夹，对收藏夹内视频进行“to-ob”的操作
-    for favFolderName in names:
+    for favFolderName in config.syncFolders:
         path_one = '{}/{}'.format(config.vroot, favFolderName)  #本地收藏夹路径
         print("----------"+favFolderName)
         if not favFolderName in favFolders:
@@ -172,11 +166,6 @@ def main():
             #单个视频的笔记
             batchSingleNote(user, singlelist, path_one, checkbox=1)
 
-    #储存当前已抓取的信息字典
-    #字典转换
-    infoJson = json.dumps(user.infoDict, sort_keys=False, indent=4, separators=(',', ': '))
-    #字典储存
-    with open(config.json_save,"w") as f_save:
-        f_save.write(infoJson)
+    user.save_state()  #储存当前已抓取的信息字典
 
 main()
