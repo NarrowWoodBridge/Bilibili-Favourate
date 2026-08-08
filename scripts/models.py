@@ -51,11 +51,10 @@ class User:
             self.syncFolders[tSyncFolder] = getFavFolderVideos(self, favFolders[tSyncFolder])  #获取收藏夹内所有视频信息
     #储存当前已抓取的信息字典
     def save_state(self):
-        #字典转换
-        infoJson = json.dumps(self.infoDict, sort_keys=False, indent=4, separators=(',', ': '))
-        #字典储存
-        with open(self.config.json_save,"w") as f_save:
-            f_save.write(infoJson)
+        #使用 UTF-8 直接写入中文，避免转换为 \uXXXX 转义
+        with open(self.config.json_save, "w", encoding="utf-8") as f_save:
+            json.dump(self.infoDict, f_save, ensure_ascii=False, indent=4)
+            f_save.write("\n")
 
 @dataclass
 class VideoInfo:

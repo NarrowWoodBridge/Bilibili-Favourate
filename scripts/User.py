@@ -16,7 +16,7 @@ def load_state(user):
     renamed = user.renamed  ###
     #1.读取infoDict.json
     if os.path.exists(config.json_save):
-        with open(config.json_save) as f:
+        with open(config.json_save, "r", encoding="utf-8") as f:
             user.infoDict = json.load(f)
     #2.1.获取md文件列表
     mdfiles = []  #局部
