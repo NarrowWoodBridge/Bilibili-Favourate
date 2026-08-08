@@ -1,9 +1,12 @@
 import requests, json, re
 
 from tools_str import *
-from models import *
 
-def getFavFolders(user):
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from models import User
+
+def getFavFolders(user: User):
     config = user.config  ###
     # 获取mid
     url = 'https://api.bilibili.com/x/web-interface/nav'
@@ -21,6 +24,22 @@ def getFavFolders(user):
         count = i['media_count']
         favData[favFolderTitle] = {'id': id_ , 'count': count}  #title作为键，id和count作为值
     return favData
+
+def getFavFolderVideos(user: User, tFavFolder):
+    config = user.config  ###
+    ret = []
+    id_ = tFavFolder['id']
+    count = tFavFolder['count']  #收藏夹内视频数量
+    num_page = int(count/20)+1  #每20个视频分为一组，求出一共多少组
+    for i in range(num_page):
+        url = 'https://api.bilibili.com/x/v3/fav/resource/list?media_id={}&pn={}&ps=20&keyword=&order=mtime&type=0&tid=0&platform=web&jsonp=jsonp'.format(id_, i+1)
+        #爬取同步收藏夹内容
+        response = requests.get(url=url, headers=config.headers)
+        json_data = json.loads(response.text)
+        medias = json_data['data']['medias']
+        for item in medias:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
+            ret.append(item)
+    return ret
 
 #根据bvid查询视频信息
 def search(user: User, bvid, aim, reason=""):

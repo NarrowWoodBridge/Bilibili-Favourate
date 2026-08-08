@@ -104,23 +104,11 @@ def main():
     favFolders = getFavFolders(user)  #存储账号上所有收藏夹的信息
 
     #遍历要同步的b站收藏夹，对收藏夹内视频进行“to-ob”的操作
-    for favFolderName in config.syncFolders:
-        path_one = '{}/{}'.format(config.vroot, favFolderName)  #本地收藏夹路径
-        print("----------"+favFolderName)
-        if not favFolderName in favFolders:
-            print("不存在此收藏夹："+favFolderName)
-            continue
-        id_ = favFolders[favFolderName]['id']
-        count = favFolders[favFolderName]['count']  #收藏夹内视频数量
-        num_page = int(count/20)+1  #每20个视频分为一组，求出一共多少组
-        for i in range(num_page):
-            url = 'https://api.bilibili.com/x/v3/fav/resource/list?media_id={}&pn={}&ps=20&keyword=&order=mtime&type=0&tid=0&platform=web&jsonp=jsonp'.format(id_, i+1)
-            #爬取同步收藏夹内容
-            response = requests.get(url=url, headers=config.headers)
-            json_data = json.loads(response.text)
-            medias = json_data['data']['medias']
-            for item in medias:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
-                bilibili_to_ob(path_one, item, user)
+    for tSyncFolderName, videos in user.syncFolders.items():
+        path_one = '{}/{}'.format(config.vroot, tSyncFolderName)  #本地收藏夹路径
+        print("----------"+tSyncFolderName)
+        for item in videos:  #遍历每一个收藏夹项目(单个视频/多page视频/视频合集)
+            bilibili_to_ob(path_one, item, user)
 
     #处理合集
     for anEP in user.eps:  #anEP有三个键：'epData', 'epSingleVideos' , 'epPath'
@@ -143,6 +131,7 @@ def main():
         for epVideo in epVideoList:
             bvid = epVideo['bvid']
             title2 = xreplace(epVideo['title'])
+            #补全被截断的标题
             if len(title2) >= 24:
                 title = search(user=user, bvid=bvid, aim="title", reason="获取标题，用于和第二标题比较")
                 if len(title) > len(title2) and title.startswith(title2):
