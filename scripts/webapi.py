@@ -4,7 +4,7 @@ from tools_str import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from models import User
+    from models import User, VideoInfo
 
 def getFavFolders(user: User):
     config = user.config  ###
@@ -66,18 +66,19 @@ def search(user: User, bvid, aim, reason=""):
         'upper': xreplace(data['owner']['name']),
         'cover': data['pic']
     }
+    curDict = infoDict[bvid]  ###
     if 'ugc_season' not in data:  #没有ugc_season字段->非视频合集->单个视频/多page视频
         if len(data['pages'])==1:
-            infoDict[bvid]['type'] = "single"
+            curDict['type'] = "single"
         else:
-            infoDict[bvid]['type'] = "pages"
-            pages = data['pages']
-            infoDict[bvid]['pages'] = [ {'page':i['page'],'part':xreplace(i['part'])} for i in pages]
+            curDict['type'] = "pages"
+            pages = [ {'page':i['page'],'part':xreplace(i['part'])} for i in data['pages']]
+            curDict['pages'] = pages
     else:
-        infoDict[bvid]['type'] = "ep"
+        curDict['type'] = "ep"
         epDataOri = data['ugc_season']
         epVideoListOri = epDataOri['sections'][0]['episodes']  #合集中的视频列表
-        infoDict[bvid]['epData'] = {
+        epData = {
             'title': xreplace(epDataOri['title']),  #合集标题  //!!注意字符替换
             'cover': epDataOri['cover'],  #合集封面
             'epVideoList': [ {
@@ -85,6 +86,7 @@ def search(user: User, bvid, aim, reason=""):
                 'title': xreplace(i['title'])
             } for i in epVideoListOri ]
         }
+        curDict['epData'] = epData
     #返回结果
     print("???查询：("+reason+")"+infoDict[bvid]['title'])
     if aim == "all":

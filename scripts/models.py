@@ -1,6 +1,7 @@
 from pathlib import Path
 from dataclasses import dataclass, field
 import json, re
+from typing import Literal, TypedDict
 
 from tools_file import readfile
 from webapi import *
@@ -36,7 +37,7 @@ class User:
     config: Config
     uid: str = "123456"  # 用户id
     name: str = "username"  # 用户名
-    infoDict: dict = field(default_factory=dict)  #key为bvid，value为视频信息组成的字典{'title':xx, 'upper':xx......}
+    infoDict: InfoCache = field(default_factory=dict)  #key为bvid，value为视频信息组成的字典{'title':xx, 'upper':xx......}
     eps: list = field(default_factory=list)  #视频合集最后再一起处理  
     renamed: dict = field(default_factory=dict)  #重命名的文件记录字典，key为原始标题，value为[文件夹路径，修改后的标题]
     syncFolders: dict = field(default_factory=dict)  #要同步的收藏夹信息，key为收藏夹名称，value为收藏夹内视频的请求响应
@@ -56,12 +57,23 @@ class User:
             json.dump(self.infoDict, f_save, ensure_ascii=False, indent=4)
             f_save.write("\n")
 
-@dataclass
-class VideoInfo:
-    type: str = ""  #视频类型：单个视频/多page视频/视频合集
-    bvid: str = ""
-    title: str = ""
-    upper: str = ""
-    cover: str = ""  #封面
-    pages: list = field(default_factory=list)  #多page视频的每一页信息组成的列表
-    epData: dict = field(default_factory=dict)  #视频合集的元数据
+class PageInfo(TypedDict):
+    page: int
+    part: str
+class EpisodeVideoInfo(TypedDict):
+    bvid: str
+    title: str
+class EpisodeData(TypedDict):
+    title: str
+    cover: str
+    epVideoList: list[EpisodeVideoInfo]
+class VideoInfoRequired(TypedDict):
+    type: Literal["single", "pages", "ep"]  #视频类型：单个视频/多page视频/视频合集
+    bvid: str
+    title: str
+    upper: str
+    cover: str
+class VideoInfo(VideoInfoRequired, total=False):
+    pages: list[PageInfo]  #多page视频的每一页信息组成的列表
+    epData: EpisodeData  #视频合集的元数据
+InfoCache = dict[str, VideoInfo]
